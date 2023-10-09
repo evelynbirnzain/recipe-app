@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182711927814",
+    "project_id": "dad-2-p",
+    "storage_bucket": "dad-2-p.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182711927814:android:2a59803e0a575f1f9def87",
+        "android_client_info": {
+          "package_name": "com.example.dad_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPSfEFtsxtTX9kah5_um5t2-zEcPH99lI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
