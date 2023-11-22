@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/recipe_provider.dart';
+import '../../providers/recipe_provider.dart';
+import '../../providers/user_provider.dart';
 
 class RecipeListWidget extends ConsumerWidget {
   final String? categoryId;
   final String? search;
+  final bool favourites;
 
-  RecipeListWidget(this.categoryId, this.search);
+  RecipeListWidget(this.categoryId, this.search, this.favourites);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var recipes = ref.watch(recipesProvider);
+    if (favourites) {
+      recipes = recipes.where((r) => r.favorites.contains(ref.read(userProvider).value?.uid)).toList();
+    }
     if (categoryId != null) {
       recipes = recipes.where((r) => r.category.id == categoryId).toList();
     }

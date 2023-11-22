@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
 
-import '../providers/recipe_provider.dart';
+import '../../providers/recipe_provider.dart';
 
 class FeaturedRecipeWidget extends ConsumerWidget {
   @override

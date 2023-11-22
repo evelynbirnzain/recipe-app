@@ -19,19 +19,34 @@ class RecipeNotifier extends StateNotifier<List<Recipe>> {
   }
 
   void addRecipe(Recipe recipe) async {
-    print(recipe);
     final recipeData = recipe.toFirestore();
-    print(recipeData);
     final recipeRef = await _firestore.collection('recipes').add(recipeData);
-    print(recipeRef);
     final savedRecipe = Recipe.fromFirestore(recipeData, recipeRef.id);
-    print(savedRecipe);
     state = [...state, savedRecipe];
   }
 
   void deleteRecipe(String id) async {
     await _firestore.collection('recipes').doc(id).delete();
     state = state.where((recipe) => recipe.id != id).toList();
+  }
+
+  void toggle(String id, String uid) async {
+    final recipe = state.firstWhere((recipe) => recipe.id == id);
+    final likes = recipe.favorites;
+    if (likes.contains(uid)) {
+      likes.remove(uid);
+    } else {
+      likes.add(uid);
+    }
+    final recipeData = recipe.toFirestore();
+    await _firestore.collection('recipes').doc(id).update(recipeData);
+    state = state.map((recipe) {
+      if (recipe.id == id) {
+        return Recipe.fromFirestore(recipeData, recipe.id);
+      } else {
+        return recipe;
+      }
+    }).toList();
   }
 }
 

@@ -1,13 +1,13 @@
-import 'package:dad_2/widgets/screen_wrapper.dart';
+import 'package:dad_2/widgets/screen_wrapper/screen_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../widgets/recipe_details.dart';
+import '../../widgets/recipe/recipe_details.dart';
 
-class RecipeScreen extends ConsumerWidget {
+class RecipeDetailsScreen extends ConsumerWidget {
   final String id;
 
-  RecipeScreen(this.id);
+  RecipeDetailsScreen(this.id);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,5 +16,3 @@ class RecipeScreen extends ConsumerWidget {
     );
   }
 }
-
-

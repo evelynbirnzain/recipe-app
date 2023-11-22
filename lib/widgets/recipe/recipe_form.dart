@@ -3,8 +3,9 @@ import 'package:dad_2/providers/recipe_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/recipe.dart';
-import '../providers/category_provider.dart';
+import '../../models/recipe.dart';
+import '../../providers/category_provider.dart';
+import '../../providers/user_provider.dart';
 
 class RecipeFormWidget extends ConsumerWidget {
   final StateProvider<List<String>> ingredientsProvider;
@@ -39,6 +40,8 @@ class RecipeFormWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesProvider);
+    final user = ref.watch(userProvider);
+    print(user);
 
     if (categories.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -149,6 +152,7 @@ class RecipeFormWidget extends ConsumerWidget {
                   .doc(_categoryController.text),
               ingredients: ingredients,
               steps: steps,
+              author: user.value!.uid,
             );
             ref.read(recipesProvider.notifier).addRecipe(recipe);
             _nameController.clear();

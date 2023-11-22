@@ -6,13 +6,17 @@ class Recipe {
   final DocumentReference category;
   final List<String> ingredients;
   final List<String> steps;
+  final String author;
+  final List<String> favorites;
 
   Recipe(
       {required this.id,
       required this.name,
       required this.category,
       required this.ingredients,
-      required this.steps});
+      required this.steps,
+      required this.author,
+      this.favorites = const []});
 
   factory Recipe.fromFirestore(Map<String, dynamic> data, String id) {
     return Recipe(
@@ -21,6 +25,8 @@ class Recipe {
       category: data['category'],
       ingredients: data['ingredients'].cast<String>(),
       steps: data['steps'].cast<String>(),
+      author: data['author'],
+      favorites: data['likes']?.cast<String>() ?? [],
     );
   }
 
@@ -31,6 +37,8 @@ class Recipe {
       'category': category,
       'ingredients': ingredients,
       'steps': steps,
+      'author': author,
+      'likes': favorites,
     };
   }
 }
