@@ -21,6 +21,7 @@ class HomeScreen extends ConsumerWidget {
                   onPressed: () => context.go('/categories'),
                   child: const Text('Show all categories'))),
           CategoryListWidget(),
+          ElevatedButton(onPressed: () => context.go('/new-recipe'), child: const Text('new recipe')),
         ],
       ),
     );

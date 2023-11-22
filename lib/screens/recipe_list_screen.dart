@@ -3,7 +3,6 @@ import 'package:dad_2/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/navigation_provider.dart';
 import '../widgets/recipe_list.dart';
 
 class RecipeListScreen extends ConsumerWidget {

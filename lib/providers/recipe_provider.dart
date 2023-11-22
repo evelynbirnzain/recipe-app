@@ -17,6 +17,22 @@ class RecipeNotifier extends StateNotifier<List<Recipe>> {
 
     state = recipes;
   }
+
+  void addRecipe(Recipe recipe) async {
+    print(recipe);
+    final recipeData = recipe.toFirestore();
+    print(recipeData);
+    final recipeRef = await _firestore.collection('recipes').add(recipeData);
+    print(recipeRef);
+    final savedRecipe = Recipe.fromFirestore(recipeData, recipeRef.id);
+    print(savedRecipe);
+    state = [...state, savedRecipe];
+  }
+
+  void deleteRecipe(String id) async {
+    await _firestore.collection('recipes').doc(id).delete();
+    state = state.where((recipe) => recipe.id != id).toList();
+  }
 }
 
 final recipesProvider = StateNotifierProvider<RecipeNotifier, List<Recipe>>((ref) => RecipeNotifier());

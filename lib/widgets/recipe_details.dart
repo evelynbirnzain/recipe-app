@@ -1,6 +1,7 @@
 import 'package:dad_2/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/recipe.dart';
 import '../providers/recipe_provider.dart';
@@ -21,16 +22,31 @@ class RecipeDetailsWidget extends ConsumerWidget {
   }
 }
 
-class _RecipeDetailsWidget extends StatelessWidget {
+class _RecipeDetailsWidget extends ConsumerWidget {
   final Recipe recipe;
 
   const _RecipeDetailsWidget(this.recipe);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
       children: [
-        SectionHeader(recipe.name, leading: Icon(Icons.restaurant)),
+        SectionHeader(recipe.name, leading: Icon(Icons.restaurant), trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () => context.go('/recipes/${recipe.id}/edit'),
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                ref.read(recipesProvider.notifier).deleteRecipe(recipe.id);
+                context.go('/recipes');
+              }
+            ),
+          ],
+        )),
         const Placeholder(),
         const SectionHeader('Ingredients', leading: Icon(Icons.shopping_cart)),
         ListView.builder(
