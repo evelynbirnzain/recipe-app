@@ -20,3 +20,8 @@ class CategoryNotifier extends StateNotifier<List<Category>> {
 }
 
 final categoriesProvider = StateNotifierProvider<CategoryNotifier, List<Category>>((ref) => CategoryNotifier());
+
+final categoryProvider = Provider.family<Category?, String>((ref, id) {
+  final categories = ref.watch(categoriesProvider);
+  return categories.firstWhere((c) => c.id == id);
+});

@@ -1,7 +1,12 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dad_2/providers/recipe_provider.dart';
+import 'package:dad_2/widgets/util/section_header.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/recipe.dart';
 import '../../providers/category_provider.dart';
@@ -16,11 +21,13 @@ class RecipeFormWidget extends ConsumerWidget {
   final _ingredientsController = TextEditingController();
   final _stepsController = TextEditingController();
 
+  final Recipe? recipe;
+
   RecipeFormWidget(this.ingredientsProvider, this.stepsProvider,
-      [Recipe? recipe]) {
+      [this.recipe]) {
     if (recipe != null) {
-      _nameController.text = recipe.name;
-      _categoryController.text = recipe.category.id;
+      _nameController.text = recipe!.name;
+      _categoryController.text = recipe!.category.id;
     }
   }
 
@@ -37,11 +44,52 @@ class RecipeFormWidget extends ConsumerWidget {
           recipe,
         );
 
+  void submitIngredient(WidgetRef ref, List<String> ingredients) {
+    if (_ingredientsController.text.trim().isEmpty) return;
+
+    ref.read(ingredientsProvider.notifier).state = [
+      ...ingredients,
+      _ingredientsController.text
+    ];
+    _ingredientsController.clear();
+  }
+
+  void submitStep(WidgetRef ref, List<String> steps) {
+    if (_stepsController.text.trim().isEmpty) return;
+
+    ref.read(stepsProvider.notifier).state = [...steps, _stepsController.text];
+    _stepsController.clear();
+  }
+
+  void onSubmit(WidgetRef ref, List<String> ingredients, List<String> steps,
+      AsyncValue<User?> user, BuildContext context) {
+    if (_nameController.text.trim().isEmpty ||
+        ingredients.isEmpty ||
+        steps.isEmpty) {
+      return;
+    }
+
+    final recipe = Recipe(
+      id: this.recipe == null ? '' : this.recipe!.id,
+      name: _nameController.text,
+      category: FirebaseFirestore.instance
+          .collection('categories')
+          .doc(_categoryController.text),
+      ingredients: ingredients,
+      steps: steps,
+      author: user.value!.uid,
+    );
+
+    ref
+        .read(recipesProvider.notifier)
+        .addRecipe(recipe)
+        .then((value) => context.go('/recipes/${value.id}'));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesProvider);
     final user = ref.watch(userProvider);
-    print(user);
 
     if (categories.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -53,7 +101,8 @@ class RecipeFormWidget extends ConsumerWidget {
         ? categories.first.id
         : _categoryController.text;
 
-    return Column(
+    return Expanded(
+        child: ListView(
       children: [
         TextField(
           controller: _nameController,
@@ -62,6 +111,88 @@ class RecipeFormWidget extends ConsumerWidget {
             border: OutlineInputBorder(),
           ),
         ),
+        const SectionHeader("Ingredients", leading: Icon(Icons.shopping_cart)),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _ingredientsController,
+                onEditingComplete: () => submitIngredient(ref, ingredients),
+                decoration: const InputDecoration(
+                  hintText: 'Enter ingredient',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            IconButton(
+                icon: const Icon(Icons.add),
+                color: Theme.of(context).primaryColor,
+                onPressed: () => submitIngredient(ref, ingredients),
+                tooltip: 'Add ingredient'),
+          ],
+        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: ingredients.length,
+            itemBuilder: (context, index) {
+              if (ingredients.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final ingredient = ingredients[index];
+              return Card(
+                  child: ListTile(
+                      title: Text(ingredient),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          ingredients.removeAt(index);
+                          ref.read(ingredientsProvider.notifier).state =
+                              ingredients.toList();
+                        },
+                      )));
+            }),
+        const SectionHeader("Steps", leading: Icon(Icons.list)),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _stepsController,
+                onEditingComplete: () => submitStep(ref, steps),
+                decoration: const InputDecoration(
+                  hintText: 'Enter step',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            IconButton(
+                icon: const Icon(Icons.add),
+                color: Theme.of(context).primaryColor,
+                onPressed: () => submitStep(ref, steps),
+                tooltip: 'Add step'),
+          ],
+        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: steps.length,
+            itemBuilder: (context, index) {
+              if (steps.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final step = steps[index];
+              return Card(
+                  child: ListTile(
+                title: Text(step),
+                leading: Text('${index + 1}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    steps.removeAt(index);
+                    ref.read(stepsProvider.notifier).state = steps.toList();
+                  },
+                ),
+              ));
+            }),
+        const SectionHeader("Category", leading: Icon(Icons.category)),
         DropdownButtonFormField(
           value: _categoryController.text,
           items: categories
@@ -71,95 +202,23 @@ class RecipeFormWidget extends ConsumerWidget {
                   ))
               .toList(),
           onChanged: (value) {
-            print(value);
             _categoryController.text = value.toString();
           },
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
           ),
         ),
-        TextField(
-          controller: _ingredientsController,
-          decoration: const InputDecoration(
-            hintText: 'Enter ingredient',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: null,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              if (_ingredientsController.text.trim().isEmpty) return;
-
-              ref.read(ingredientsProvider.notifier).state = [
-                ...ingredients,
-                _ingredientsController.text
-              ];
-              _ingredientsController.clear();
-            },
-            child: const Text('Add ingredient')),
-        ListView(
-          shrinkWrap: true,
-          children: ingredients
-              .map((e) => Card(
-                    child: ListTile(
-                      title: Text(e),
-                    ),
-                  ))
-              .toList(),
-        ),
-        TextField(
-          controller: _stepsController,
-          decoration: const InputDecoration(
-            hintText: 'Enter step',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: null,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              if (_stepsController.text.trim().isEmpty) return;
-
-              ref.read(stepsProvider.notifier).state = [
-                ...steps,
-                _stepsController.text
-              ];
-              _stepsController.clear();
-            },
-            child: const Text('Add step')),
-        ListView(
-          shrinkWrap: true,
-          children: steps
-              .map((e) => Card(
-                    child: ListTile(
-                      title: Text(e),
-                    ),
-                  ))
-              .toList(),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (_nameController.text.trim().isEmpty ||
-                ingredients.isEmpty ||
-                steps.isEmpty) {
-              return;
-            }
-
-            final recipe = Recipe(
-              id: '',
-              name: _nameController.text,
-              category: FirebaseFirestore.instance
-                  .collection('categories')
-                  .doc(_categoryController.text),
-              ingredients: ingredients,
-              steps: steps,
-              author: user.value!.uid,
-            );
-            ref.read(recipesProvider.notifier).addRecipe(recipe);
-            _nameController.clear();
-          },
-          child: const Text('Save recipe'),
-        ),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              onPressed: () => onSubmit(ref, ingredients, steps, user, context),
+              child: const Text('Save recipe'),
+            )),
       ],
-    );
+    ));
   }
 }

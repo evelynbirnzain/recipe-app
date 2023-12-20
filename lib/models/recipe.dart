@@ -41,4 +41,23 @@ class Recipe {
       'likes': favorites,
     };
   }
+
+  copyWith({
+    String? id,
+    String? name,
+    DocumentReference? category,
+    List<String>? ingredients,
+    List<String>? steps,
+    String? author,
+    List<String>? favorites,
+  }) {
+    return Recipe(
+      id: id ?? this.id,
+      author: author ?? this.author,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      ingredients: ingredients ?? this.ingredients,
+      steps: steps ?? this.steps,
+    );
+  }
 }

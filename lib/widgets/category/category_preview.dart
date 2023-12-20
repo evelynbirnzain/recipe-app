@@ -1,0 +1,28 @@
+import 'dart:math';
+
+import 'package:dad_2/providers/category_provider.dart';
+import 'package:dad_2/widgets/util/card_with_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class CategoryPreview extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categories = ref.watch(categoriesProvider);
+
+    return Container(
+        height: 250,
+        width: double.infinity,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: min(8, categories.length),
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            return CardWithImage(
+              category.name,
+              '/recipes?categoryId=${category.id}',
+            );
+          },
+        ));
+  }
+}

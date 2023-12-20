@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/recipe.dart';
+import '../../providers/category_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -31,6 +32,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final category = ref.watch(categoryProvider(recipe.category.id));
     return ListView(
       children: [
         SectionHeader(recipe.name,
@@ -52,7 +54,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                             .deleteRecipe(recipe.id);
                         context.go('/recipes');
                       }),
-                if (user.hasValue && !recipe.favorites.contains(user.value!.uid))
+                if (user.value != null && !recipe.favorites.contains(user.value!.uid))
                   IconButton(
                       icon: Icon(Icons.favorite_border),
                       onPressed: () {
@@ -60,7 +62,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                             .read(recipesProvider.notifier)
                             .toggle(recipe.id, user.value!.uid);
                       }),
-                if (user.hasValue && recipe.favorites.contains(user.value!.uid))
+                if (user.value != null && recipe.favorites.contains(user.value!.uid))
                   IconButton(
                       icon: Icon(Icons.favorite),
                       onPressed: () {
@@ -72,6 +74,11 @@ class _RecipeDetailsWidget extends ConsumerWidget {
               ],
             )),
         const Placeholder(),
+        SectionHeader('Category', leading: Icon(Icons.category)),
+        ListTile(
+          title: Text(category?.name ?? 'Unknown'),
+          onTap: () => context.go('/categories/${recipe.category.id}'),
+        ),
         const SectionHeader('Ingredients', leading: Icon(Icons.shopping_cart)),
         ListView.builder(
           shrinkWrap: true,
