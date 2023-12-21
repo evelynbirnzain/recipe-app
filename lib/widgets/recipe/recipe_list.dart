@@ -32,7 +32,7 @@ class RecipeListWidget extends ConsumerWidget {
                   onPressed: () {
                     ref
                         .read(recipesProvider.notifier)
-                        .toggle(recipe.id, user.value!.uid);
+                        .toggleFavourite(recipe.id, user.value!.uid);
                   }),
               Text(recipe.favorites.length.toString())
             ],
@@ -48,7 +48,7 @@ class RecipeListWidget extends ConsumerWidget {
                 onPressed: () {
                   ref
                       .read(recipesProvider.notifier)
-                      .toggle(recipe.id, user.value!.uid);
+                      .toggleFavourite(recipe.id, user.value!.uid);
                 }),
             Text(recipe.favorites.length.toString())
           ],

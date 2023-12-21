@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:math';
 
 import '../../models/recipe.dart';
 import '../../providers/category_provider.dart';
@@ -10,8 +9,11 @@ import '../../providers/recipe_provider.dart';
 class FeaturedRecipeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(recipesProvider.notifier).getFeaturedRecipe();
     final recipe = ref.watch(featuredRecipeProvider);
+
+    if (recipe == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -47,6 +49,11 @@ class FeaturedRecipeWidget extends ConsumerWidget {
 
   Widget _desktopLayout(Recipe recipe, BuildContext context, WidgetRef ref) {
     final category = ref.watch(categoryProvider(recipe.category.id));
+
+    if (category == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Card(
         elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),

@@ -14,7 +14,7 @@ class RecipeListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var title;
+    String title;
     if (categoryId != null) {
       final category = ref.watch(categoryProvider(categoryId!));
       title = 'Recipes in category "${category?.name}"';

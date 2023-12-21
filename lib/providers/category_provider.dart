@@ -23,5 +23,10 @@ final categoriesProvider = StateNotifierProvider<CategoryNotifier, List<Category
 
 final categoryProvider = Provider.family<Category?, String>((ref, id) {
   final categories = ref.watch(categoriesProvider);
+
+  if (categories.isEmpty) {
+    return null;
+  }
+
   return categories.firstWhere((c) => c.id == id);
 });

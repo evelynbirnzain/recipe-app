@@ -14,7 +14,7 @@ class FavouriteRecipesScreen extends ConsumerWidget {
     final user = ref.watch(userProvider);
     return ScreenWrapper(Column(
       children: [
-        SectionHeader("My Favourite Recipes", leading: const Icon(Icons.restaurant)),
+        const SectionHeader("My Favourite Recipes", leading: Icon(Icons.restaurant)),
         RecipeListWidget(null, null, true, user.value?.uid),
       ],
     ));

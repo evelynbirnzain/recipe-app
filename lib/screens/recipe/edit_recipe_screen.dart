@@ -16,6 +16,11 @@ class EditRecipeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final recipe = ref.watch(recipeProvider(id));
+
+    if (recipe == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return ScreenWrapper(Column(children: [
       const SectionHeader("Edit recipe", leading: Icon(Icons.edit)),
       user.value == null

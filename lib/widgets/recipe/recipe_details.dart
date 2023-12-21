@@ -15,12 +15,11 @@ class RecipeDetailsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    try {
-      final recipe = ref.watch(recipeProvider(id));
-      return _RecipeDetailsWidget(recipe);
-    } catch (e) {
+    final recipe = ref.watch(recipeProvider(id));
+    if (recipe == null) {
       return const Center(child: CircularProgressIndicator());
     }
+    return _RecipeDetailsWidget(recipe);
   }
 }
 
@@ -33,6 +32,10 @@ class _RecipeDetailsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final category = ref.watch(categoryProvider(recipe.category.id));
+
+    if (category == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return ListView(
       children: [
         SectionHeader(recipe.name,
@@ -54,21 +57,23 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                             .deleteRecipe(recipe.id);
                         context.go('/recipes');
                       }),
-                if (user.value != null && !recipe.favorites.contains(user.value!.uid))
+                if (user.value != null &&
+                    !recipe.favorites.contains(user.value!.uid))
                   IconButton(
                       icon: Icon(Icons.favorite_border),
                       onPressed: () {
                         ref
                             .read(recipesProvider.notifier)
-                            .toggle(recipe.id, user.value!.uid);
+                            .toggleFavourite(recipe.id, user.value!.uid);
                       }),
-                if (user.value != null && recipe.favorites.contains(user.value!.uid))
+                if (user.value != null &&
+                    recipe.favorites.contains(user.value!.uid))
                   IconButton(
                       icon: Icon(Icons.favorite),
                       onPressed: () {
                         ref
                             .read(recipesProvider.notifier)
-                            .toggle(recipe.id, user.value!.uid);
+                            .toggleFavourite(recipe.id, user.value!.uid);
                       }),
                 Text('Favorited by ${recipe.favorites.length} user(s)')
               ],
