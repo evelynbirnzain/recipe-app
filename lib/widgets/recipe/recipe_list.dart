@@ -19,22 +19,25 @@ class RecipeListWidget extends ConsumerWidget {
   Widget? buildFavouriteButton(
       BuildContext context, Recipe recipe, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    if (user.value == null) {
-      return null;
-    }
 
-    if (!recipe.favorites.contains(user.value!.uid)) {
+    Null Function()? onPressed;
+    if (user.value == null) {
+      onPressed = null;
+    } else {
+      onPressed = () {
+        ref
+            .read(recipesProvider.notifier)
+            .toggleFavourite(recipe.id, user.value!.uid);
+      };
+    }
+    if (!recipe.favorites.contains(user.value?.uid)) {
       return SizedBox(
           width: 47,
           child: Row(
             children: [
               IconButton(
                   icon: const Icon(Icons.favorite_border),
-                  onPressed: () {
-                    ref
-                        .read(recipesProvider.notifier)
-                        .toggleFavourite(recipe.id, user.value!.uid);
-                  }),
+                  onPressed: onPressed),
               Text(recipe.favorites.length.toString())
             ],
           ));
@@ -46,11 +49,7 @@ class RecipeListWidget extends ConsumerWidget {
           children: [
             IconButton(
                 icon: const Icon(Icons.favorite),
-                onPressed: () {
-                  ref
-                      .read(recipesProvider.notifier)
-                      .toggleFavourite(recipe.id, user.value!.uid);
-                }),
+                onPressed: onPressed),
             Text(recipe.favorites.length.toString())
           ],
         ));
@@ -66,8 +65,6 @@ class RecipeListWidget extends ConsumerWidget {
     if (favourites && uid == null) {
       return const Text('Please log in first to see your favourite recipes');
     }
-
-    print('ncols: $ncols');
 
     if (ncols == 1) {
       return Expanded(

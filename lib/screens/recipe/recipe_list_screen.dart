@@ -51,7 +51,6 @@ class RecipeListScreen extends ConsumerWidget {
       ));
     }
 
-    print("$width, ${Breakpoints.lg}, $categoryId");
     if (width > Breakpoints.lg && categoryId != null) {
       return ScreenWrapper(Column(
         crossAxisAlignment: CrossAxisAlignment.start,
