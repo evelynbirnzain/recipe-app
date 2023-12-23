@@ -6,6 +6,8 @@ import '../../breakpoints.dart';
 import '../../providers/navigation_provider.dart';
 
 class BottomNavBarWidget extends ConsumerWidget {
+  const BottomNavBarWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;

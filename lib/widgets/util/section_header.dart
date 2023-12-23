@@ -6,7 +6,7 @@ class SectionHeader extends StatelessWidget {
   final Widget? trailing;
   final String subtitle;
 
-  const SectionHeader(this.title, {this.leading, this.subtitle = '', this.trailing});
+  const SectionHeader(this.title, {super.key, this.leading, this.subtitle = '', this.trailing});
 
   @override
   Widget build(BuildContext context) {

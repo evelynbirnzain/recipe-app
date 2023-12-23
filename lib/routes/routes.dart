@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 
 final routes = [
-  GoRoute(path: '/', builder: (context, state) => HomeScreen()),
+  GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
   GoRoute(
       path: '/recipes/:id',
       builder: (context, state) => RecipeDetailsScreen(state.pathParameters['id']!)),
@@ -19,10 +19,10 @@ final routes = [
       }),
   GoRoute(
       path: '/favorites',
-      builder: (context, state) => RecipeListScreen(null, null, true)),
+      builder: (context, state) => const RecipeListScreen(null, null, true)),
   GoRoute(
-      path: '/categories', builder: (context, state) => RecipeCategoryScreen()),
-  GoRoute(path: '/new-recipe', builder: (context, state) => NewRecipeScreen()),
+      path: '/categories', builder: (context, state) => const RecipeCategoryScreen()),
+  GoRoute(path: '/new-recipe', builder: (context, state) => const NewRecipeScreen()),
   GoRoute(
       path: '/recipes/:id/edit',
       builder: (context, state) =>

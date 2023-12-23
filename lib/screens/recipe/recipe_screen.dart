@@ -7,7 +7,7 @@ import '../../widgets/recipe/recipe_details.dart';
 class RecipeDetailsScreen extends ConsumerWidget {
   final String id;
 
-  RecipeDetailsScreen(this.id);
+  const RecipeDetailsScreen(this.id, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -7,7 +7,7 @@ import '../../providers/user_provider.dart';
 import '../../widgets/util/section_header.dart';
 
 class NewRecipeScreen extends ConsumerWidget {
-  NewRecipeScreen();
+  const NewRecipeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

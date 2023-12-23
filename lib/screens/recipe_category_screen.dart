@@ -7,15 +7,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/util/section_header.dart';
 
 class RecipeCategoryScreen extends ConsumerWidget {
+  const RecipeCategoryScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
 
     if (width <= Breakpoints.sm) {
-      return ScreenWrapper(
+      return const ScreenWrapper(
         Column(
           children: [
-            const SectionHeader("Categories", leading: Icon(Icons.category)),
+            SectionHeader("Categories", leading: Icon(Icons.category)),
             CategoryListWidget(1),
           ],
         ),
@@ -23,10 +25,10 @@ class RecipeCategoryScreen extends ConsumerWidget {
     }
 
     if (width <= Breakpoints.md) {
-      return ScreenWrapper(
+      return const ScreenWrapper(
         Column(
           children: [
-            const SectionHeader("Categories", leading: Icon(Icons.category)),
+            SectionHeader("Categories", leading: Icon(Icons.category)),
             CategoryListWidget(2),
           ],
         ),
@@ -34,20 +36,20 @@ class RecipeCategoryScreen extends ConsumerWidget {
     }
 
     if (width <= Breakpoints.lg) {
-      return ScreenWrapper(
+      return const ScreenWrapper(
         Column(
           children: [
-            const SectionHeader("Categories", leading: Icon(Icons.category)),
+            SectionHeader("Categories", leading: Icon(Icons.category)),
             CategoryListWidget(3),
           ],
         ),
       );
     }
 
-    return ScreenWrapper(
+    return const ScreenWrapper(
       Column(
         children: [
-          const SectionHeader("Categories", leading: Icon(Icons.category)),
+          SectionHeader("Categories", leading: Icon(Icons.category)),
           CategoryListWidget(5),
         ],
       ),

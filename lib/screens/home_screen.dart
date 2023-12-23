@@ -8,13 +8,15 @@ import 'package:go_router/go_router.dart';
 import '../widgets/recipe/featured_recipe.dart';
 
 class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenWrapper(
       ListView(
         children: [
           const SectionHeader("Featured recipe", leading: Icon(Icons.star)),
-          FeaturedRecipeWidget(),
+          const FeaturedRecipeWidget(),
           SectionHeader("Categories",
               leading: const Icon(Icons.category),
               trailing: ElevatedButton(
@@ -25,7 +27,7 @@ class HomeScreen extends ConsumerWidget {
                           Theme.of(context).colorScheme.primary // foreground
                       ),
                   child: const Text('Show all categories'))),
-          CategoryPreview(false)
+          const CategoryPreview(false)
         ],
       ),
     );

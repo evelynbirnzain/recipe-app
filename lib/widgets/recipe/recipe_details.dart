@@ -11,7 +11,7 @@ import '../../providers/user_provider.dart';
 class RecipeDetailsWidget extends ConsumerWidget {
   final String id;
 
-  RecipeDetailsWidget(this.id);
+  const RecipeDetailsWidget(this.id, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,18 +39,18 @@ class _RecipeDetailsWidget extends ConsumerWidget {
     return ListView(
       children: [
         SectionHeader(recipe.name,
-            leading: Icon(Icons.restaurant),
+            leading: const Icon(Icons.restaurant),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (user.value?.uid == recipe.author)
                   IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                     onPressed: () => context.go('/recipes/${recipe.id}/edit'),
                   ),
                 if (user.value?.uid == recipe.author)
                   IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       onPressed: () {
                         ref
                             .read(recipesProvider.notifier)
@@ -60,7 +60,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                 if (user.value != null &&
                     !recipe.favorites.contains(user.value!.uid))
                   IconButton(
-                      icon: Icon(Icons.favorite_border),
+                      icon: const Icon(Icons.favorite_border),
                       onPressed: () {
                         ref
                             .read(recipesProvider.notifier)
@@ -69,7 +69,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                 if (user.value != null &&
                     recipe.favorites.contains(user.value!.uid))
                   IconButton(
-                      icon: Icon(Icons.favorite),
+                      icon: const Icon(Icons.favorite),
                       onPressed: () {
                         ref
                             .read(recipesProvider.notifier)
@@ -79,9 +79,9 @@ class _RecipeDetailsWidget extends ConsumerWidget {
               ],
             )),
         const Placeholder(),
-        SectionHeader('Category', leading: Icon(Icons.category)),
+        const SectionHeader('Category', leading: Icon(Icons.category)),
         ListTile(
-          title: Text(category?.name ?? 'Unknown'),
+          title: Text(category.name ?? 'Unknown'),
           onTap: () => context.go('/recipes?categoryId=${recipe.category.id}'),
         ),
         const SectionHeader('Ingredients', leading: Icon(Icons.shopping_cart)),

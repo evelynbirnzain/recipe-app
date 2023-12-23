@@ -10,7 +10,7 @@ class CategoryListWidget extends ConsumerWidget {
 
   final int ncols;
 
-  CategoryListWidget(this.ncols);
+  const CategoryListWidget(this.ncols, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

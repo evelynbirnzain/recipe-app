@@ -10,7 +10,7 @@ import '../../providers/user_provider.dart';
 class EditRecipeScreen extends ConsumerWidget {
   final String id;
 
-  EditRecipeScreen(this.id);
+  const EditRecipeScreen(this.id, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

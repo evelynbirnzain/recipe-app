@@ -1,4 +1,3 @@
-import 'package:dad_2/breakpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +14,7 @@ class RecipeListWidget extends ConsumerWidget {
   final bool favourites;
   final int ncols;
 
-  RecipeListWidget(this.categoryId, this.search, this.favourites, {this.ncols = 2});
+  const RecipeListWidget(this.categoryId, this.search, this.favourites, {super.key, this.ncols = 2});
 
   Widget? buildFavouriteButton(
       BuildContext context, Recipe recipe, WidgetRef ref) {

@@ -9,7 +9,7 @@ import 'login.dart';
 class ScreenWrapper extends ConsumerWidget {
   final Widget widget;
 
-  ScreenWrapper(this.widget);
+  const ScreenWrapper(this.widget, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +39,7 @@ class ScreenWrapper extends ConsumerWidget {
                   },
                 )),
             const SizedBox(width: 10),
-            LoginWidget(),
+            const LoginWidget(),
           ],
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -48,7 +48,7 @@ class ScreenWrapper extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           child: widget,
         ),
-        bottomNavigationBar: BottomNavBarWidget(),
+        bottomNavigationBar: const BottomNavBarWidget(),
         floatingActionButton: user.value == null || width > Breakpoints.lg
             ? null
             : FloatingActionButton(

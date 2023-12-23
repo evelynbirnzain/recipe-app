@@ -13,7 +13,7 @@ class RecipeListScreen extends ConsumerWidget {
   final String? search;
   final bool favourites;
 
-  RecipeListScreen(this.categoryId, this.search, this.favourites);
+  const RecipeListScreen(this.categoryId, this.search, this.favourites, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +35,7 @@ class RecipeListScreen extends ConsumerWidget {
       return ScreenWrapper(Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionHeader(title, leading: Icon(Icons.restaurant)),
+          SectionHeader(title, leading: const Icon(Icons.restaurant)),
           RecipeListWidget(categoryId, search, favourites, ncols: 1),
         ],
       ));
@@ -45,7 +45,7 @@ class RecipeListScreen extends ConsumerWidget {
       return ScreenWrapper(Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SectionHeader(title, leading: Icon(Icons.restaurant)),
+          SectionHeader(title, leading: const Icon(Icons.restaurant)),
           RecipeListWidget(categoryId, search, favourites, ncols: 3),
         ],
       ));
@@ -57,8 +57,8 @@ class RecipeListScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeader("Categories", leading: Icon(Icons.category)),
-          CategoryPreview(true),
-          SectionHeader(title, leading: Icon(Icons.restaurant)),
+          const CategoryPreview(true),
+          SectionHeader(title, leading: const Icon(Icons.restaurant)),
           RecipeListWidget(categoryId, search, favourites, ncols: 5),
         ],
       ));
@@ -67,7 +67,7 @@ class RecipeListScreen extends ConsumerWidget {
     return ScreenWrapper(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(title, leading: Icon(Icons.restaurant)),
+        SectionHeader(title, leading: const Icon(Icons.restaurant)),
         RecipeListWidget(categoryId, search, favourites, ncols: 5),
       ],
     ));

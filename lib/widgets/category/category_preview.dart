@@ -9,7 +9,7 @@ class CategoryPreview extends ConsumerWidget {
 
   final bool showAll;
 
-  CategoryPreview(this.showAll);
+  const CategoryPreview(this.showAll, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +17,7 @@ class CategoryPreview extends ConsumerWidget {
 
     final cnt = showAll ? categories.length : min(8, categories.length);
     final height = showAll ? 150.0 : 250.0;
-    return Container(
+    return SizedBox(
         height: height,
         width: double.infinity,
         child: ListView.builder(

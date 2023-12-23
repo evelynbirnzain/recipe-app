@@ -8,6 +8,8 @@ import '../../providers/category_provider.dart';
 import '../../providers/recipe_provider.dart';
 
 class FeaturedRecipeWidget extends ConsumerWidget {
+  const FeaturedRecipeWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recipe = ref.watch(featuredRecipeProvider);
@@ -78,7 +80,7 @@ class FeaturedRecipeWidget extends ConsumerWidget {
                     titleTextStyle: const TextStyle(fontSize: 24),
                   ),
                   ListTile(
-                      title: Text("Category: ${category?.name}"),
+                      title: Text("Category: ${category.name}"),
 
                       ),
                 ],
