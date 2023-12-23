@@ -10,10 +10,4 @@ class Category {
       name: data['name'],
     );
   }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'name': name,
-    };
-  }
 }

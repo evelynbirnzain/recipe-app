@@ -8,8 +8,8 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
   var _search = '';
   var _categoryId = '';
   var _favourites = false;
-  var _uid;
-  var _lastPageKey;
+  String? _uid;
+  int? _lastPageKey;
 
   final PagingController<int, Recipe> pagingController =
       PagingController(firstPageKey: 0);
@@ -27,7 +27,6 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
       return;
     }
     _lastPageKey = pageKey;
-    print('fetchPage $pageKey: $_categoryId, $_search, $_favourites, $_uid');
     try {
       Query<Map<String, dynamic>> query = _firestore.collection('recipes');
 
@@ -110,7 +109,6 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
     final index =
         pagingController.itemList?.indexWhere((recipe) => recipe.id == id);
 
-    print("idx: $index");
     if (index != null && index >= 0) {
       pagingController.itemList?[index] = recipe;
       _lastPageKey = null;
@@ -120,9 +118,6 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
 
   void setFilter(
       String categoryId, String search, bool favourites, String? uid) {
-
-    print('currentFilter: $_categoryId, $_search, $_favourites, $_uid');
-
     if (_categoryId == categoryId &&
         _search == search &&
         _favourites == favourites &&
@@ -134,9 +129,6 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
     _search = search;
     _favourites = favourites;
     _uid = uid;
-
-    print('setFilter: $_categoryId, $_search, $_favourites, $_uid');
-
     _lastPageKey = null;
     pagingController.refresh();
   }

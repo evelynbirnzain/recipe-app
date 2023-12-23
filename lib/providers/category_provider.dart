@@ -33,7 +33,6 @@ class CategoryNotifier extends StateNotifier<List<Category>> {
       QuerySnapshot<Map<String, dynamic>> snapshot;
       if (pageKey == 0) {
         snapshot = await query.get();
-        print(snapshot.docs.length);
       } else {
         final last = pagingController.itemList!.last;
         snapshot = await query.startAfter([last.name]).get();
@@ -50,11 +49,8 @@ class CategoryNotifier extends StateNotifier<List<Category>> {
         final nextPageKey = pageKey + categories.length;
         pagingController.appendPage(categories, nextPageKey);
       }
-
-      print(categories);
     } catch (error) {
       pagingController.error = error;
-      print(error);
     }
   }
 }
