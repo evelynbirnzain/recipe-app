@@ -13,7 +13,8 @@ class RecipeListScreen extends ConsumerWidget {
   final String? search;
   final bool favourites;
 
-  const RecipeListScreen(this.categoryId, this.search, this.favourites, {super.key});
+  const RecipeListScreen(this.categoryId, this.search, this.favourites,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,6 +37,9 @@ class RecipeListScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionHeader(title, leading: const Icon(Icons.restaurant)),
+          if (search != null)
+            const Text(
+                'The search is case sensitive. Make sure to take that into account if you are not getting any results!'),
           RecipeListWidget(categoryId, search, favourites, ncols: 1),
         ],
       ));
@@ -46,6 +50,9 @@ class RecipeListScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionHeader(title, leading: const Icon(Icons.restaurant)),
+          if (search != null)
+            const Text(
+                'The search is case sensitive. Make sure to take that into account if you are not getting any results!'),
           RecipeListWidget(categoryId, search, favourites, ncols: 3),
         ],
       ));
@@ -67,6 +74,9 @@ class RecipeListScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title, leading: const Icon(Icons.restaurant)),
+        if (search != null)
+          const Text(
+              'The search is case sensitive. Make sure to take that into account if you are not getting any results!'),
         RecipeListWidget(categoryId, search, favourites, ncols: 5),
       ],
     ));

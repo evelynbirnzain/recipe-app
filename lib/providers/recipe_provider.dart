@@ -3,7 +3,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../models/recipe.dart';
 
-class RecipesNotifier extends StateNotifier<Recipe?> {
+class RecipeNotifier extends StateNotifier<Recipe?> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  RecipeNotifier() : super(null);
+
+  void getRecipe(String id) async {
+    if (id == '') {
+      final snapshot = await _firestore.collection('recipes').limit(1).get();
+      final recipe = Recipe.fromFirestore(
+          snapshot.docs.first.data(), snapshot.docs.first.id);
+      state = recipe;
+      return;
+    }
+    final snapshot = await _firestore.collection('recipes').doc(id).get();
+    final recipe = Recipe.fromFirestore(snapshot.data()!, snapshot.id);
+    state = recipe;
+  }
+}
+
+class PagingControllerProvider extends StateNotifier<PagingController<int, Recipe>> {
   final int _pageSize = 20;
   var _search = '';
   var _categoryId = '';
@@ -11,11 +30,8 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
   String? _uid;
   int? _lastPageKey;
 
-  final PagingController<int, Recipe> pagingController =
-      PagingController(firstPageKey: 0);
-
-  RecipesNotifier() : super(null) {
-    pagingController.addPageRequestListener((pageKey) {
+  PagingControllerProvider() : super(PagingController(firstPageKey: 0)) {
+    state.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
   }
@@ -46,7 +62,7 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
       if (pageKey == 0) {
         snapshot = await query.get();
       } else {
-        final last = pagingController.itemList!.last;
+        final last = state.itemList!.last;
         snapshot = await query.startAfter([last.name, last.id]).get();
       }
 
@@ -56,13 +72,13 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
 
       final isLastPage = recipes.length < _pageSize;
       if (isLastPage) {
-        pagingController.appendLastPage(recipes);
+        state.appendLastPage(recipes);
       } else {
         final nextPageKey = pageKey + recipes.length;
-        pagingController.appendPage(recipes, nextPageKey);
+        state.appendPage(recipes, nextPageKey);
       }
     } catch (error) {
-      pagingController.error = error;
+      state.error = error;
       print(error);
     }
   }
@@ -70,24 +86,22 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
   Future<Recipe> addRecipe(Recipe recipe) async {
     final recipeData = recipe.toFirestore();
     final saved = await _firestore.collection('recipes').add(recipeData);
+
+    state.itemList?.add(recipe.copyWith(id: saved.id));
+    state.refresh();
+
     return recipe.copyWith(id: saved.id);
   }
 
   void deleteRecipe(String id) async {
     await _firestore.collection('recipes').doc(id).delete();
-  }
-
-  void getFeaturedRecipe() async {
-    final snapshot = await _firestore.collection('recipes').limit(1).get();
-    final recipe = Recipe.fromFirestore(
-        snapshot.docs.first.data(), snapshot.docs.first.id);
-    state = recipe;
+    state.itemList?.removeWhere((recipe) => recipe.id == id);
+    state.refresh();
   }
 
   Future<Recipe> getRecipe(String id) async {
     final snapshot = await _firestore.collection('recipes').doc(id).get();
     final recipe = Recipe.fromFirestore(snapshot.data()!, snapshot.id);
-    state = recipe;
     return recipe;
   }
 
@@ -107,12 +121,12 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
     await _firestore.collection('recipes').doc(id).update(recipeData);
 
     final index =
-        pagingController.itemList?.indexWhere((recipe) => recipe.id == id);
+        state.itemList?.indexWhere((recipe) => recipe.id == id);
 
     if (index != null && index >= 0) {
-      pagingController.itemList?[index] = recipe;
+      state.itemList?[index] = recipe;
       _lastPageKey = null;
-      pagingController.refresh();
+      state.refresh();
     }
   }
 
@@ -130,34 +144,36 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
     _favourites = favourites;
     _uid = uid;
     _lastPageKey = null;
-    pagingController.refresh();
-  }
-
-  void fetchRecipe(String id) async {
-    final snapshot = await _firestore.collection('recipes').doc(id).get();
-    final recipe = Recipe.fromFirestore(snapshot.data()!, snapshot.id);
-    state = recipe;
+    state.refresh();
   }
 }
 
-final recipesProvider = StateNotifierProvider<RecipesNotifier, Recipe?>((ref) {
-  return RecipesNotifier();
+final recipesProvider =
+    StateNotifierProvider<PagingControllerProvider, PagingController<int, Recipe>>((ref) {
+  return PagingControllerProvider();
+});
+
+final _recipeProvider = StateNotifierProvider<RecipeNotifier, Recipe?>((ref) {
+  return RecipeNotifier();
 });
 
 final recipeProvider = Provider.family<Recipe?, String>((ref, id) {
-  final recipe = ref.watch(recipesProvider);
-  if (recipe?.id == id) {
-    return recipe;
+  final recipe = ref.watch(_recipeProvider);
+  if (recipe == null || recipe.id != id) {
+    ref.read(_recipeProvider.notifier).getRecipe(id);
   }
-  ref.read(recipesProvider.notifier).getRecipe(id);
-  return null;
+  return recipe;
+});
+
+final _featuredRecipeProvider =
+    StateNotifierProvider<RecipeNotifier, Recipe?>((ref) {
+  return RecipeNotifier();
 });
 
 final featuredRecipeProvider = Provider<Recipe?>((ref) {
-  final recipe = ref.watch(recipesProvider);
-  if (recipe != null) {
-    return recipe;
+  final recipe = ref.watch(_featuredRecipeProvider);
+  if (recipe == null) {
+    ref.read(_featuredRecipeProvider.notifier).getRecipe('');
   }
-  ref.read(recipesProvider.notifier).getFeaturedRecipe();
-  return null;
+  return recipe;
 });

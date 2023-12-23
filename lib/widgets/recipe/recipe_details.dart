@@ -55,7 +55,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
                         ref
                             .read(recipesProvider.notifier)
                             .deleteRecipe(recipe.id);
-                        context.go('/recipes');
+                        context.go('/');
                       }),
                 if (user.value != null &&
                     !recipe.favorites.contains(user.value!.uid))

@@ -14,7 +14,8 @@ class RecipeListWidget extends ConsumerWidget {
   final bool favourites;
   final int ncols;
 
-  const RecipeListWidget(this.categoryId, this.search, this.favourites, {super.key, this.ncols = 2});
+  const RecipeListWidget(this.categoryId, this.search, this.favourites,
+      {super.key, this.ncols = 2});
 
   Widget? buildFavouriteButton(
       BuildContext context, Recipe recipe, WidgetRef ref) {
@@ -47,9 +48,7 @@ class RecipeListWidget extends ConsumerWidget {
         width: 47,
         child: Row(
           children: [
-            IconButton(
-                icon: const Icon(Icons.favorite),
-                onPressed: onPressed),
+            IconButton(icon: const Icon(Icons.favorite), onPressed: onPressed),
             Text(recipe.favorites.length.toString())
           ],
         ));
@@ -58,9 +57,10 @@ class RecipeListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uid = ref.watch(userProvider).value?.uid;
-    final notifier = ref.read(recipesProvider.notifier);
-    notifier.setFilter(categoryId ?? '', search ?? '', favourites, uid);
-    final pagingController = notifier.pagingController;
+    ref.read(recipesProvider.notifier)
+        .setFilter(categoryId ?? '', search ?? '', favourites, uid);
+
+    final pagingController = ref.watch(recipesProvider);
 
     if (favourites && uid == null) {
       return const Text('Please log in first to see your favourite recipes');
