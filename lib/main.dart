@@ -25,7 +25,7 @@ class RecipeApp extends StatelessWidget {
     return ProviderScope(child: MaterialApp.router(
       title: 'Recipe App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, secondary: Colors.teal.shade300),
         useMaterial3: true,
       ),
       routerConfig: router,

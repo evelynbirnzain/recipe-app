@@ -1,5 +1,4 @@
 import 'package:dad_2/screens/recipe/edit_recipe_screen.dart';
-import 'package:dad_2/screens/recipe/favourite_recipes_screen.dart';
 import 'package:dad_2/screens/recipe/new_recipe_screen.dart';
 import 'package:dad_2/screens/recipe_category_screen.dart';
 import 'package:dad_2/screens/recipe/recipe_list_screen.dart';
@@ -16,11 +15,11 @@ final routes = [
       path: '/recipes',
       builder: (context, state) {
         return RecipeListScreen(state.uri.queryParameters['categoryId'],
-            state.uri.queryParameters['search']);
+            state.uri.queryParameters['search'], false);
       }),
   GoRoute(
       path: '/favorites',
-      builder: (context, state) => FavouriteRecipesScreen()),
+      builder: (context, state) => RecipeListScreen(null, null, true)),
   GoRoute(
       path: '/categories', builder: (context, state) => RecipeCategoryScreen()),
   GoRoute(path: '/new-recipe', builder: (context, state) => NewRecipeScreen()),

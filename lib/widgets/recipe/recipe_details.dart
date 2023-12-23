@@ -82,7 +82,7 @@ class _RecipeDetailsWidget extends ConsumerWidget {
         SectionHeader('Category', leading: Icon(Icons.category)),
         ListTile(
           title: Text(category?.name ?? 'Unknown'),
-          onTap: () => context.go('/categories/${recipe.category.id}'),
+          onTap: () => context.go('/recipes?categoryId=${recipe.category.id}'),
         ),
         const SectionHeader('Ingredients', leading: Icon(Icons.shopping_cart)),
         ListView.builder(

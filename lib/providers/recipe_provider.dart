@@ -4,11 +4,12 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../models/recipe.dart';
 
 class RecipesNotifier extends StateNotifier<Recipe?> {
-  final int _pageSize = 3;
+  final int _pageSize = 20;
   var _search = '';
   var _categoryId = '';
   var _favourites = false;
   var _uid;
+  var _lastPageKey;
 
   final PagingController<int, Recipe> pagingController =
       PagingController(firstPageKey: 0);
@@ -22,6 +23,11 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void _fetchPage(int pageKey) async {
+    if (_lastPageKey == pageKey) {
+      return;
+    }
+    _lastPageKey = pageKey;
+    print('fetchPage $pageKey: $_categoryId, $_search, $_favourites, $_uid');
     try {
       Query<Map<String, dynamic>> query = _firestore.collection('recipes');
 
@@ -74,7 +80,8 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
 
   void getFeaturedRecipe() async {
     final snapshot = await _firestore.collection('recipes').limit(1).get();
-    final recipe = Recipe.fromFirestore(snapshot.docs.first.data(), snapshot.docs.first.id);
+    final recipe = Recipe.fromFirestore(
+        snapshot.docs.first.data(), snapshot.docs.first.id);
     state = recipe;
   }
 
@@ -103,14 +110,26 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
     final index =
         pagingController.itemList?.indexWhere((recipe) => recipe.id == id);
 
+    print("idx: $index");
     if (index != null && index >= 0) {
       pagingController.itemList?[index] = recipe;
+      _lastPageKey = null;
       pagingController.refresh();
     }
   }
 
   void setFilter(
       String categoryId, String search, bool favourites, String? uid) {
+
+    print('currentFilter: $_categoryId, $_search, $_favourites, $_uid');
+
+    if (_categoryId == categoryId &&
+        _search == search &&
+        _favourites == favourites &&
+        _uid == uid) {
+      return;
+    }
+
     _categoryId = categoryId;
     _search = search;
     _favourites = favourites;
@@ -118,6 +137,7 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
 
     print('setFilter: $_categoryId, $_search, $_favourites, $_uid');
 
+    _lastPageKey = null;
     pagingController.refresh();
   }
 
@@ -128,8 +148,7 @@ class RecipesNotifier extends StateNotifier<Recipe?> {
   }
 }
 
-final recipesProvider =
-    StateNotifierProvider<RecipesNotifier, Recipe?>((ref) {
+final recipesProvider = StateNotifierProvider<RecipesNotifier, Recipe?>((ref) {
   return RecipesNotifier();
 });
 

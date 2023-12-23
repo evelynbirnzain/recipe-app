@@ -25,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
                           Theme.of(context).colorScheme.primary // foreground
                       ),
                   child: const Text('Show all categories'))),
-          CategoryPreview()
+          CategoryPreview(false)
         ],
       ),
     );

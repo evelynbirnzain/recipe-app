@@ -1,3 +1,4 @@
+import 'package:dad_2/breakpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,7 @@ class FeaturedRecipeWidget extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth > 600) {
+        if (constraints.maxWidth > Breakpoints.md) {
           return _desktopLayout(recipe, context, ref);
         } else {
           return _phoneLayout(recipe, context);
@@ -30,20 +31,20 @@ class FeaturedRecipeWidget extends ConsumerWidget {
     return Card(
         elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: InkWell(
+        child: GestureDetector(
           onTap: () => context.go('/recipes/${recipe.id}'),
-          child: Column(children: [
-            Expanded(
-              child: ConstrainedBox(
+          child: Column(
+            children: [
+              ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 300),
                 child: const Placeholder(),
               ),
-            ),
-            ListTile(
-              title: Text(recipe.name),
-              titleTextStyle: const TextStyle(fontSize: 20),
-            ),
-          ]),
+              ListTile(
+                title: Center(child: Text(recipe.name)),
+                titleTextStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+            ],
+          ),
         ));
   }
 
@@ -57,7 +58,7 @@ class FeaturedRecipeWidget extends ConsumerWidget {
     return Card(
         elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: InkWell(
+        child: GestureDetector(
           onTap: () => context.go('/recipes/${recipe.id}'),
           child: Row(children: [
             Expanded(

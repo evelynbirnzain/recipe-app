@@ -1,3 +1,4 @@
+import 'package:dad_2/breakpoints.dart';
 import 'package:dad_2/widgets/screen_wrapper/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,9 @@ class ScreenWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
           // clickable title with hand cursor
@@ -45,12 +49,12 @@ class ScreenWrapper extends ConsumerWidget {
           child: widget,
         ),
         bottomNavigationBar: BottomNavBarWidget(),
-        floatingActionButton: user.value == null
+        floatingActionButton: user.value == null || width > Breakpoints.lg
             ? null
             : FloatingActionButton(
                 onPressed: () => context.go('/new-recipe'),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.onSecondary,
                 child: const Icon(Icons.add),
               ));
   }
