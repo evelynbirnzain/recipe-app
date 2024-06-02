@@ -3,12 +3,13 @@
 ## Recipe App
 
 "Recipe App" is a responsive Flutter application that allows users to browse recipes. Recipes can be searched by name
-and
-filtered by category. Users can also log in to the app, so that they can save their favorite recipes and create and
+and filtered by category. Users can also log in to the app, so that they can save their favorite recipes and create and
 manage their own recipes.
 
 The application uses Flutter to create a responsive UI that works on both mobile and desktop devices. The application
 uses Firebase/Firestore for authentication and for storing recipe data.
+
+View the app [here](https://evelynbirnzain.github.io/recipe-app/).
 
 ### Challenges
 
