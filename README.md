@@ -1,6 +1,9 @@
-# Device-Agnostic Design Course Project II - aefb0529-5609-478a-9e45-de618c79a3a0
+# Device-Agnostic Design Course Project II: Recipe App
 
-## Recipe App
+A simple cross-platform and responsive recipe app built with Flutter and Firebase.
+View the app [here](https://evelynbirnzain.github.io/recipe-app/).
+
+## Description
 
 "Recipe App" is a responsive Flutter application that allows users to browse recipes. Recipes can be searched by name
 and filtered by category. Users can also log in to the app, so that they can save their favorite recipes and create and
@@ -9,9 +12,8 @@ manage their own recipes.
 The application uses Flutter to create a responsive UI that works on both mobile and desktop devices. The application
 uses Firebase/Firestore for authentication and for storing recipe data.
 
-View the app [here](https://evelynbirnzain.github.io/recipe-app/).
 
-### Challenges
+## Challenges
 
 * Infinite scroll: It took me quite a while to implement infinite scrolling. I think the infinite_scroll_pagination
   package seems relatively straightforward, but I wasn't sure how to best integrate pagination with the recipe provider
@@ -27,7 +29,7 @@ View the app [here](https://evelynbirnzain.github.io/recipe-app/).
   it would be a lot more time consuming to develop separate applications for desktop and mobile still; at least here the
   logic stays the same.
 
-### Learning moments
+## Learning moments
 
 * State management: I think I overall started to understand better how state management works in Flutter and surely what
   doesn't work well.
@@ -38,14 +40,14 @@ View the app [here](https://evelynbirnzain.github.io/recipe-app/).
   that ended up not working out along the way anyway. So I think one learning would be that it's not always worth it
   spending time reworking the same thing, when what you have already works anyway.
 
-### Database 
+## Database 
 There are two collections in the database: categories and recipes.
 
-#### Categories
+### Categories
 * id (auto-generated)
 * name: String
 
-#### Recipes
+### Recipes
 * id (auto-generated)
 * name: String
 * category: Reference to a category
@@ -54,7 +56,7 @@ There are two collections in the database: categories and recipes.
 * author: String, i.e. uid
 * favorites: List of Strings, i.e. uids of the users who have favorited the recipe
 
-### Dependencies
+## Dependencies
 
 ```yaml
 name: dad_2
